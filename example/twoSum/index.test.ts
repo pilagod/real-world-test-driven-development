@@ -1,3 +1,5 @@
+import { twoSum } from "./index"
+
 /**
  * Two Sum (https://leetcode.com/problems/two-sum/description/)
  *
@@ -8,7 +10,9 @@
  * You can return the answer in any order.
  */
 describe("Two Sum", () => {
-  it("should pass this canary test", () => {
-    expect(true).toBe(true)
+  test("given nums = [2, 7, 11, 15] and target = 9, the output should be [0, 1]", () => {
+    const result = twoSum([2, 7, 11, 15], 9)
+
+    expect(result).toEqual([0, 1])
   })
 })
