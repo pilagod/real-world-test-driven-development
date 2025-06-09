@@ -21,4 +21,10 @@ describe("Two Sum", () => {
 
     expect(result).toEqual([1, 2])
   })
+
+  test("given nums = [3, 3] and target = 6, the output should be [0, 1]", () => {
+    const result = twoSum([3, 3], 6)
+
+    expect(result).toEqual([0, 1])
+  })
 })
