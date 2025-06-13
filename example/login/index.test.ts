@@ -1,5 +1,17 @@
+import { AccessTokenIssuer } from "./accessTokenIssuer"
 import { LoginCommand, LoginUseCase } from "./index"
 import { User, UserRepository } from "./userRepository"
+
+// Could leverage existing mocking library based on your programming language
+class AccessTokenIssuerStub implements AccessTokenIssuer {
+  public issue(email: string): Promise<string> {
+    return Promise.resolve(`Access token issued from ${email}`)
+  }
+
+  public verify(accessToken: string, email: string) {
+    return accessToken.includes(email)
+  }
+}
 
 // Could leverage existing mocking library based on your programming language
 class UserRepositoryStub implements UserRepository {
@@ -22,6 +34,8 @@ describe("Login", () => {
     passwordBcryptHash:
       "$2a$12$vAmMk0.kvWnnwGydimfaVOLEVZKboM7gkTDzLExvlP44P5GJM/F6C",
   })
+  const userPassword = "world"
+
   const loginUseCase = new LoginUseCase(new UserRepositoryStub(user))
 
   it("should throw not found error when user with given email doesn't exist", async () => {
@@ -46,5 +60,21 @@ describe("Login", () => {
       )
 
     await expect(loginWithInvalidPassword()).rejects.toThrow("invalid login")
+  })
+
+  it("should issue access token with user's email", async () => {
+    const { accessToken } = await loginUseCase.execute(
+      new LoginCommand({
+        email: user.email,
+        password: userPassword,
+      }),
+    )
+
+    const isAccessTokenValid = new AccessTokenIssuerStub().verify(
+      accessToken,
+      user.email,
+    )
+
+    expect(isAccessTokenValid).toBe(true)
   })
 })

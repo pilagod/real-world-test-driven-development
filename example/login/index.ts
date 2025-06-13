@@ -33,5 +33,6 @@ export class LoginUseCase {
 
     // TODO
     // 3. Issue access token with user's email
+    return { accessToken: "" }
   }
 }
