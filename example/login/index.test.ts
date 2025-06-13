@@ -36,7 +36,10 @@ describe("Login", () => {
   })
   const userPassword = "world"
 
-  const loginUseCase = new LoginUseCase(new UserRepositoryStub(user))
+  const loginUseCase = new LoginUseCase(
+    new UserRepositoryStub(user),
+    new AccessTokenIssuerStub(),
+  )
 
   it("should throw not found error when user with given email doesn't exist", async () => {
     const loginWithNonExistentUser = () =>
