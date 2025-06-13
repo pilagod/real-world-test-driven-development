@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt"
+
 import { UserRepository } from "./userRepository"
 
 export class LoginCommand {
@@ -19,8 +21,17 @@ export class LoginUseCase {
     if (!user) {
       throw new Error("user not found")
     }
+
+    // Verify password against user's password hash
+    const isPasswordValid = await bcrypt.compare(
+      command.password,
+      user.passwordBcryptHash,
+    )
+    if (!isPasswordValid) {
+      throw new Error("invalid login")
+    }
+
     // TODO
-    // 2. Verify password against user's password hash
     // 3. Issue access token with user's email
   }
 }
