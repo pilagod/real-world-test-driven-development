@@ -1,10 +1,12 @@
 import { LoginCommand, LoginUseCase } from "./index"
-import { UserRepository } from "./userRepository"
+import { User, UserRepository } from "./userRepository"
 
 // Could leverage existing mocking library based on your programming language
 class UserRepositoryStub implements UserRepository {
-  public findByEmail(_: string): Promise<null> {
-    return Promise.resolve(null)
+  public constructor(private user?: User) {}
+
+  public findByEmail(email: string): Promise<User | null> {
+    return Promise.resolve(this.user?.email === email ? this.user : null)
   }
 }
 
@@ -26,5 +28,25 @@ describe("Login", () => {
       )
 
     await expect(loginWithNonExistentUser()).rejects.toThrow("not found")
+  })
+
+  it("should throw invalid login error when password doesn't match user's password hash", async () => {
+    const user = new User({
+      email: "hello@test.com",
+      // 12 rounds bcrypt hash for "world"
+      passwordBcryptHash:
+        "$2a$12$vAmMk0.kvWnnwGydimfaVOLEVZKboM7gkTDzLExvlP44P5GJM/F6C",
+    })
+    const loginUseCase = new LoginUseCase(new UserRepositoryStub(user))
+
+    const loginWithInvalidPassword = () =>
+      loginUseCase.execute(
+        new LoginCommand({
+          email: user.email,
+          password: "invalid password",
+        }),
+      )
+
+    await expect(loginWithInvalidPassword()).rejects.toThrow("invalid login")
   })
 })
