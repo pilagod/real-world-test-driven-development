@@ -26,6 +26,7 @@
     "@eslint/js": "^9.17.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "@tsconfig/recommended": "^1.0.8",
+    "@types/bcrypt": "^5.0.2",
     "@types/jest": "^29.5.14",
     "@types/jest-when": "^3.5.5",
     "eslint": "^9.17.0",
@@ -38,5 +39,8 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.1"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0"
   }
 }
